@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-14T04:54:14.611Z",
+  "environment": "Local Node server using real upstream APIs",
+  "lanes": [
+    {
+      "id": "news",
+      "provider": "hn",
+      "status": "ok",
+      "items": 6,
+      "query_url": "https://hn.algolia.com/api/v1/search_by_date?tags=story&query=artificial+intelligence&hitsPerPage=60&numericFilters=created_at_i%3E1794372846",
+      "fallback_from": {
+        "provider": "gdelt",
+        "error": "Provider timed out after 8 seconds"
+      }
+    },
+    {
+      "id": "records",
+      "provider": "federalregister",
+      "status": "ok",
+      "items": 30,
+      "query_url": "https://www.federalregister.gov/api/v1/documents.json?per_page=30&order=newest&conditions%5Bterm%5D=%22artificial+intelligence%22&conditions%5Bpublication_date%5D%5Bgte%5D=2026-08-16",
+      "fallback_from": null
+    }
+  ],
+  "limitations": [
+    "GDELT initially returned a successful climate metadata response, then HTTP 429 and timeouts were observed.",
+    "Latest successful aggregate used the explicitly labeled Hacker News fallback.",
+    "Browser diff checks use fixtures, not a claim of observed real publisher corrections."
+  ]
+}

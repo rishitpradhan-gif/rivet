@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-14T04:56:13.688Z",
+  "browser": "Chrome",
+  "fixtureChecks": [
+    "pin",
+    "added/reworded/departed exact-link diff",
+    "pin export",
+    "reload persistence",
+    "search",
+    "changed-only filter",
+    "unsafe import rejection",
+    "partial failure excluded from diff",
+    "mobile overflow",
+    "method dialog Escape",
+    "newer pin blocks backward comparison",
+    "provider changes excluded from diff"
+  ],
+  "pageErrors": [],
+  "scope": "Deterministic test fixtures; live upstream smoke checks recorded separately."
+}
