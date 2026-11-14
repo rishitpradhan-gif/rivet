@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-14T06:01:22.343Z",
+  "version": "2.0.0",
+  "url": "https://rp-rivet.vercel.app",
+  "deployment": "dpl_A1WRwjAJDBf7aeSFqnqDYcw2ycTm",
+  "checks": [
+    "anonymous live proposed-rule discovery",
+    "official document link",
+    "local draft persisted after reload",
+    "saved workspace",
+    "390px overflow",
+    "download source hash matches tested artifact"
+  ],
+  "pageErrors": [],
+  "limits": [
+    "No comment was submitted.",
+    "Official docket acceptance and exact cutoff require user verification."
+  ]
+}
