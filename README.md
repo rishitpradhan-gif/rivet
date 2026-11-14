@@ -1,6 +1,6 @@
 # Rivet
 
-**Follow the story. Keep the receipts.**
+News metadata, public records, and snapshot comparisons.
 
 A current-events desk with two independent source lanes: current news metadata and related U.S. public records. Five topics: artificial intelligence, energy, trade, climate, and space. Pin a local snapshot; compare new links, changed metadata, and links absent from a later capped result set. Export and import timestamped JSON receipts, including source query URLs.
 
