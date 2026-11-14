@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-14T04:59:52.398Z",
+  "url": "https://rp-rivet.vercel.app",
+  "actualPage": true,
+  "anonymousAccess": true,
+  "checks": [
+    "live source lanes rendered",
+    "pin and reload persisted",
+    "390px overflow",
+    "source ZIP hash matches tested artifact"
+  ],
+  "apiProviders": [
+    "Hacker News fallback",
+    "Federal Register"
+  ],
+  "pageErrors": [],
+  "gitAutoDeploy": "Vercel rejected Git connection; CLI deployment succeeded."
+}
