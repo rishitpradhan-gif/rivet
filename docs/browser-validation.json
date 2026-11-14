@@ -1,20 +1,23 @@
 {
-  "date": "2026-11-14T05:36:06.666Z",
+  "date": "2026-11-14T06:00:06.434Z",
+  "version": "2.0",
   "browser": "Chrome",
-  "fixtureChecks": [
-    "pin",
-    "added/reworded/departed exact-link diff",
-    "pin export",
+  "checks": [
+    "save rule",
+    "official submission route",
+    "draft inputs",
+    "checklist",
+    "draft export with citations",
+    "calendar reminder",
+    "workspace backup",
     "reload persistence",
-    "search",
-    "changed-only filter",
-    "unsafe import rejection",
-    "partial failure excluded from diff",
-    "mobile overflow",
-    "method dialog Escape",
-    "newer pin blocks backward comparison",
-    "provider changes excluded from diff"
+    "cross-tab edit protection",
+    "legacy import rejection",
+    "category and upstream search",
+    "390px layout and dialog",
+    "method dialog",
+    "no automatic submissions"
   ],
   "pageErrors": [],
-  "scope": "Deterministic test fixtures; live upstream smoke checks recorded separately."
+  "scope": "Deterministic test fixtures. Real provider/API checks are recorded separately."
 }

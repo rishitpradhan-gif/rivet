@@ -1,47 +1,55 @@
-# Rivet
+# Rivet — Public comment planner
 
-News metadata, public records, and snapshot comparisons.
+Find U.S. proposed rules with listed future comment dates, save deadlines, and prepare a sourced response. This is a participation workbench, not a news feed. Official submission takes place outside Rivet, through the agency’s linked route.
 
-A current-events desk with two independent source lanes: current news metadata and related U.S. public records. Five topics: artificial intelligence, energy, trade, climate, and space. Pin a local snapshot; compare new links, changed metadata, and links absent from a later capped result set. Export and import timestamped JSON receipts, including source query URLs.
+## Use it
+
+1. Search a policy term or browse keyword-based topic filters. Narrow by agency or dates due within 7/30 days. A visible, reversible filter hides routine aircraft/airspace items by default; saved workspace records are always shown.
+2. Open a record to read the agency’s abstract, date instructions, docket IDs, and official PDF. Verify exact cutoff and amendments.
+3. Save the record. Write a specific issue, citation, experience, evidence, and requested change in the local draft form.
+4. Export a draft or calendar preparation reminder. Follow the official comment route to submit your reviewed response yourself. Rivet never submits it.
+5. Export a workspace backup to keep or transfer your records and drafts. Submitted status is self-reported, not verified.
 
 ## Run locally
 
-Node.js 22+ is required. No runtime dependencies or API keys.
+Requires Node.js 22+. No runtime dependencies, API keys, or paid services.
 
 ```sh
 npm start
-# open http://127.0.0.1:4452
+# http://127.0.0.1:4452
 npm test
 ```
 
-For deterministic Chrome checks: `npm install`, install Google Chrome, keep the server running, then `npm run test:browser`. Test fixtures are clearly marked and never shipped as live content. The downloadable ZIP contains the runnable server, adapters, browser assets, and tests. Run `npm start` after extracting it.
+For deterministic browser checks: install Google Chrome, run `npm install`, start the server, and run `npm run test:browser`. The tests use clearly marked fixtures; live provider checks are recorded separately in `docs/live-validation.json`.
 
 ## API
 
-`GET /api/brief?topic=ai` returns schema `rivet-snapshot/1`. Valid topics: `ai`, `energy`, `trade`, `climate`, `space`. GET only; unknown topics reject. No arbitrary upstream URL fetching. Each lane includes its provider identity, success/error state, query URL, retrieval timestamps, bounded items, and a scope description. HTTP 200 can contain one failed lane; inspect lane status. Both lanes failing returns HTTP 502 with the failure receipt. Invalid upstream bodies, timeouts, and oversize responses become explicit source errors.
+`GET /api/opportunities` returns `rivet-opportunities/2` with a source query URL, retrieval time, provider total, and up to 200 normalized records. `?q=water` performs an upstream search (100-character limit). `?id=2026-12345` retrieves one supported proposed rule with a listed comment date, even if its date has passed. GET only; arbitrary provider URLs and invalid IDs reject. Provider errors return 502 instead of pretending there are zero opportunities. Successes cache for five minutes plus up to five minutes of stale-while-revalidate on Vercel. Instance-local coalescing and a 60-entry cache reduce repeated requests; there is no distributed quota guarantee or uptime SLA.
 
-Successful results cache for five minutes, with Vercel stale-while-revalidate up to ten more minutes. Partially successful results cache for one minute. Instance-local request coalescing reduces repeated upstream calls; this is not a distributed quota guarantee. This public prototype is not an SLA-backed news API or unlimited upstream proxy.
+The earlier news API `/api/brief` now returns HTTP 410 and points to this replacement. News snapshots from version 1 are not workspace backups and cannot be imported. Existing version-1 browser data is not deleted. Old releases remain available in GitHub history/releases.
 
-## Sources and clocks
+## Source and deadline contract
 
-- [GDELT DOC API](https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/): latest 60 matching indexed English-language links in 72 hours. Its indexing time is not a verified article publication time.
-- [Hacker News Algolia API](https://hn.algolia.com/api): explicit fallback if GDELT fails; latest 60 matching story submissions in 72 hours. Community submissions are a different sample from general news. Submission time is labeled. The GDELT failure remains visible in the receipt. No comparisons are made across different provider indexes.
-- [FederalRegister.gov API](https://www.federalregister.gov/developers/documentation/api/v1): latest 30 matching U.S. documents published in 90 days. Proposed rules, notices, final rules, and other types stay labeled. Search matches can be tangential. FederalRegister.gov is an informational XML rendition; use its linked official govinfo PDF when checking the legal record. No legal advice or official notice is provided.
+The [Federal Register API](https://www.federalregister.gov/developers/documentation/api/v1) is queried with `conditions[type][]=PRORULE`, `conditions[comment_date][gte]` set to today in America/New_York, `order=newest`, and `per_page=200`. Explicit fields include the abstract, deadline, docket IDs, comment URL, PDF, and agency date instructions. Rows are validated and rechecked against the current date. Default results are locally sorted by listed deadline.
 
-A document matching a topic is not corroboration of any headline. The desk performs no article-body scraping, generated reporting, clinical assessment, political-bias rating, or truth scoring. Titles and linked content belong to their respective publishers. No claim of worldwide novelty is made.
+This is a bounded set of the **newest** matching proposed rules, not a complete register of participation opportunities. It excludes notices, state/local processes, unsupported documents, and unknown comment dates. Keyword labels are transparent string matches, not AI relevance judgments. Search the provider to narrow a large result set. Provider totals can exceed displayed results due to the cap, validation, or a date boundary.
 
-## Snapshot semantics
+A future date does not independently verify that a docket is accepting comments. Read current amendments, exact cutoff, and official submission instructions. FederalRegister.gov is an informational rendition; the linked govinfo PDF is the official edition. Direct comment URLs are used only when supplied by the source and on an allowlisted official host. Source-provided HTTP links are upgraded to HTTPS only on those hosts. Without a comment URL, Rivet links the official document’s instructions instead of inventing a submission link.
 
-Canonical exact URLs identify items; common tracking query parameters and fragments are removed. Reworded metadata means the title or document type differs. No article-body diff or correction is inferred. A departed item can have aged out, fallen outside the cap, or changed indexing; departure is not retraction. Failed lanes and changed provider indexes are excluded from counts. Comparisons pause when a pin is newer than returned cached data.
+Calendar exports are all-day **preparation reminders one day before** the listed date, with exclusive end dates. They do not promise a closing time. Same-day/past reminders are not exported. Deadline math uses calendar dates and Eastern Time, not an invented 24-hour countdown.
 
-Snapshots are local to the browser, one pin per topic. Export before replacing a pin to preserve its history. There is no scheduled collector or server-side archive; the app checks when opened/refreshed. Browser storage can be blocked or cleared; imported receipts and in-memory pins still work for that visit. Exported receipts disclose topics and returned links. No analytics, paid APIs, accounts, cookies, or cloud profiles are implemented. Hosting and upstream providers see normal HTTP requests; publisher sites have their own privacy practices.
+## Drafting and privacy
 
-## Tests and limits
+Prompts reflect [HHS public-comment guidance](https://www.hhs.gov/sites/default/files/regulations/rulemaking-tool-kit.pdf): identify a provision, cite it, support your reasoning, and propose a specific change. The six-item checklist measures completeness only, not factual accuracy, legal sufficiency, or likely influence. No arguments, impact estimates, or evidence are generated. Nothing is submitted automatically. This is not legal advice or an official government service.
 
-Core tests cover source adapters, tracking deduplication, query allowlisting, unsafe imports, bounded/invalid upstream bodies, partial failures, and fallback provenance. Browser tests use deterministic snapshots for pin/diff/export/import/persistence, search, failures, mobile overflow, and dialog keyboard closure. Live checks are separately recorded in `docs/live-validation.json`; they do not guarantee future upstream availability. GDELT rate limits and timeouts were observed during development and retained in the record. No screen-reader audit or longitudinal field study is claimed.
+Saved records and drafts stay in browser local storage. No accounts, analytics, model APIs, or server draft database. Anyone sharing the browser or opening an exported backup can read drafts. Browser storage can be unavailable/cleared. Export backups before switching devices. Imports merge new records and preserve existing drafts. Cross-tab changes pause an open editor so stale drafts cannot silently overwrite another tab. Source metadata for saved rules is refreshed when present in a successful query, without changing draft text.
 
-## Deploy
+Public comments submitted to official portals may become public, including personal information in the text. Review that portal’s terms. Hosting and upstream providers receive normal requests; search terms are sent to the provider. Remove a saved record or clear site data to delete local drafts; downloaded files remain separate.
 
-`public/` is static output; `api/brief.js` is the Vercel Node function. Configuration is in `vercel.json`. The loopback server runs the same handler locally. No secrets are needed. Deploy using the Vercel CLI or connect this repository in your Vercel account.
+## Validation and deployment
 
-Code and original interface: MIT; see LICENSE. Self-hosted Inter has its own included font license. Upstream headlines and documents retain their respective rights and terms.
+Core/API tests cover Eastern Time/DST boundaries, invalid deadlines, safe official links, input limits, bounded provider errors, backup validation, non-generated exports, and UTF-8 calendar folding. Browser tests cover saving, writing, cited exports, reminders, reload persistence, cross-tab edit protection, backup rejection, search/filtering, mobile dialogs, and absence of automatic submissions. No screen-reader audit, actual comment submission, policy-outcome validation, or independent scientific study is claimed.
+
+Static output is `public/`; `api/opportunities.js` is the Vercel function. `server.mjs` uses the same handler locally. Build a deterministic local-app archive with `python3 scripts/package.py`. Previous UI and news validation records are retained under `docs/history/` and do not validate the new planner.
+
+Code/original interface: MIT. Inter font has its included license. Government source content retains its original status. No worldwide-novelty claim is made.

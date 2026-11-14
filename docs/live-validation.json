@@ -1,30 +1,18 @@
 {
-  "checked_at": "2026-11-14T04:54:14.611Z",
-  "environment": "Local Node server using real upstream APIs",
-  "lanes": [
-    {
-      "id": "news",
-      "provider": "hn",
-      "status": "ok",
-      "items": 6,
-      "query_url": "https://hn.algolia.com/api/v1/search_by_date?tags=story&query=artificial+intelligence&hitsPerPage=60&numericFilters=created_at_i%3E1794372846",
-      "fallback_from": {
-        "provider": "gdelt",
-        "error": "Provider timed out after 8 seconds"
-      }
-    },
-    {
-      "id": "records",
-      "provider": "federalregister",
-      "status": "ok",
-      "items": 30,
-      "query_url": "https://www.federalregister.gov/api/v1/documents.json?per_page=30&order=newest&conditions%5Bterm%5D=%22artificial+intelligence%22&conditions%5Bpublication_date%5D%5Bgte%5D=2026-08-16",
-      "fallback_from": null
-    }
+  "checked_at": "2026-11-14T05:56:01.233Z",
+  "version": "2.0.0",
+  "source": "Federal Register API",
+  "schema": "rivet-opportunities/2",
+  "provider_matches": 180,
+  "loaded_records": 179,
+  "query_url": "https://www.federalregister.gov/api/v1/documents.json?per_page=200&order=newest&conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bcomment_date%5D%5Bgte%5D=2026-11-14&fields%5B%5D=title&fields%5B%5D=abstract&fields%5B%5D=document_number&fields%5B%5D=html_url&fields%5B%5D=pdf_url&fields%5B%5D=publication_date&fields%5B%5D=comments_close_on&fields%5B%5D=type&fields%5B%5D=agencies&fields%5B%5D=docket_ids&fields%5B%5D=comment_url&fields%5B%5D=dates&fields%5B%5D=action",
+  "checks": [
+    "comment_date filter accepted by provider",
+    "proposed rules normalized with deadlines, abstracts, and official links"
   ],
-  "limitations": [
-    "GDELT initially returned a successful climate metadata response, then HTTP 429 and timeouts were observed.",
-    "Latest successful aggregate used the explicitly labeled Hacker News fallback.",
-    "Browser diff checks use fixtures, not a claim of observed real publisher corrections."
+  "limits": [
+    "No comment was submitted.",
+    "Future listed dates are not independent confirmation that a docket is accepting comments.",
+    "Old news validation records are historical only."
   ]
 }
